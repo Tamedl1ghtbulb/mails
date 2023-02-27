@@ -33,7 +33,6 @@ The composition form is pre-filled with the recipient field set to whoever sent 
 1- Clone this repo
 2- In the command line type:
 ```
-$ cd mail
 $ python3 -m venv venv
 $ pip3 install -r requirements.txt
 $ python3 manage.py runserver
