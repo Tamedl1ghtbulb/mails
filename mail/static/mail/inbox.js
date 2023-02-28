@@ -10,45 +10,49 @@ document.addEventListener('DOMContentLoaded', function() {
   // By default, load the inbox
   load_mailbox('inbox');
 });
-
+ // shows mail based on a clicked button via element
 function show_mail(element,mailbox){
 
   document.querySelector('#emails-view').style.display = 'none';
   document.querySelector('#compose-view').style.display = 'none';
   document.querySelector('#email-view').style.display = 'block';
   if (mailbox === 'sent'){
-    document.querySelector('#arhiva').style.display = 'none';
-    document.querySelector('#arhivaa').style.display = 'none';
+    document.querySelector('#archive').style.display = 'none';
+    document.querySelector('#unarchivee').style.display = 'none';
 
   }
   else if (mailbox === 'inbox'){
-    document.querySelector('#arhiva').style.display = 'block';
-    document.querySelector('#arhivaa').style.display = 'none';
+    // show archieve button logic
+    document.querySelector('#archive').style.display = 'block';
+    document.querySelector('#unarchivee').style.display = 'none';
 
     if (element.archived == 0){
-      document.querySelector('#arhiva').style.display = 'block';
+      document.querySelector('#archive').style.display = 'block';
     }
     else if (element.archived == 1){
-      document.querySelector('#arhiva').style.display = 'none';
+      document.querySelector('#archive').style.display = 'none';
     }
 
   }
+  // show unarchieve button logic
   else if (mailbox === 'archive'){
-    document.querySelector('#arhiva').style.display = 'none';
-    document.querySelector('#arhivaa').style.display = 'block';
+    document.querySelector('#archive').style.display = 'none';
+    document.querySelector('#unarchivee').style.display = 'block';
   }
-
-  document.querySelector('#titl').innerHTML = `Subject: ${element.subject}`;
-  document.querySelector('#posiljalac').innerHTML =`Sender: ${element.sender}`;
+  // Inserts subject, sender, receipients etc. into HTML
+  document.querySelector('#title').innerHTML = `<strong>Subject:</strong> ${element.subject}`;
+  document.querySelector('#sender').innerHTML =`<div><strong>From:</strong> <span>${element.sender}</span><div></div>`;
+  
   const primaoci = element.recipients
+  // Accounts for all receipients
   primaoci.forEach(function(prim){
-    document.querySelector('#primalac').innerHTML =`Receipients: ${prim}`;
+    document.querySelector('#receiver').innerHTML =`<strong>Receipients:</strong>: ${prim}`;
   });
 
-  document.querySelector('#telo').innerHTML = element.body;
-  document.querySelector('#vreme').innerHTML = element.timestamp;
-
-  document.querySelector('#arhiva').onsubmit = function() {
+  document.querySelector('#bodyy').innerHTML = element.body;
+  document.querySelector('#time').innerHTML = `<strong>Timestamp:</strong>${element.timestamp}`;
+  // Changes the archieve property (archieves it)
+  document.querySelector('#archive').onsubmit = function() {
     fetch(`/emails/${element.id}`, {
       method: 'PUT',
       body: JSON.stringify({
@@ -56,7 +60,8 @@ function show_mail(element,mailbox){
       })
     })
   }
-  document.querySelector('#arhivaa').onsubmit = function() {
+  // Changes the archieve property (unarchieves it)
+  document.querySelector('#unarchivee').onsubmit = function() {
     fetch(`/emails/${element.id}`, {
       method: 'PUT',
       body: JSON.stringify({
@@ -65,7 +70,7 @@ function show_mail(element,mailbox){
     })
   }
 
-  //document.querySelector('#reply').onsubmit = reply(element);
+  // shows compose email forms based on click, and hides other views. Also inserts sender,subject etc.
   const ele = element;
   document.querySelector('#replyy').addEventListener('submit', function(event){
       event.preventDefault()
@@ -78,6 +83,7 @@ function show_mail(element,mailbox){
       document.querySelector('#compose-body').value = `ON ${element.timestamp}, ${element.sender} wrote: ${element.body}`;
       return false;
   });
+  // Changes the read property
   fetch(`/emails/${element.id}`, {
     method: 'PUT',
     body: JSON.stringify({
@@ -87,13 +93,15 @@ function show_mail(element,mailbox){
 
   return false;
 }
+
+ // Shows the view of compose emails via DOM
 function compose_email() {
 
-  // Show compose view and hide other views
+  // Shows compose view and hides other views
   document.querySelector('#emails-view').style.display = 'none';
   document.querySelector('#compose-view').style.display = 'block';
   document.querySelector('#email-view').style.display = 'none';
-  // Clear out composition fields
+  // Clears out fields
   document.querySelector('#compose-recipients').value = '';
   document.querySelector('#compose-subject').value = '';
   document.querySelector('#compose-body').value = '';
@@ -114,7 +122,7 @@ function load_mailbox(mailbox) {
     // Print emails
     const svimai = emails;
     svimai.forEach(function(element){
-      console.log(element);
+      //console.log(element);
       const elem = document.createElement('ul');
       elem.addEventListener('click', function() {
         show_mail(element,mailbox)
@@ -123,10 +131,10 @@ function load_mailbox(mailbox) {
       elem.innerHTML = `<h4>FROM: ${element.sender}</h4> <h5>Subject: ${element.subject}</h5>  <p>time:  ${element.timestamp}</p>`;
       document.querySelector('#emails-view').append(elem);
       if (element.read === false){
-        elem.classList.add('bg-secondary');
+        elem.classList.add('bg-light');
       }
       else if (element.read === true){
-        elem.classList.add('bg-light');
+        elem.classList.add('bg-secondary');
       }
     })
 });
@@ -135,16 +143,16 @@ function load_mailbox(mailbox) {
 
 
 function send_email() {
-  const re = document.querySelector('#compose-recipients').value;
-  const su = document.querySelector('#compose-subject').value;
-  const bo = document.querySelector('#compose-body').value;
+  const receipients = document.querySelector('#compose-recipients').value;
+  const subject = document.querySelector('#compose-subject').value;
+  const body = document.querySelector('#compose-body').value;
 
   fetch('/emails', {
     method: 'POST',
     body: JSON.stringify({
-        recipients: re,
-        subject: su,
-        body: bo
+        recipients: receipients,
+        subject: subject,
+        body: body
     })
   })
   .then(response => response.json())

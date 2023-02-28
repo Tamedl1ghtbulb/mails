@@ -11,27 +11,46 @@
     <a class="btn btn-sm btn-outline-primary" href="{% url 'logout' %}">Log Out</a>
     <hr>
 
-    <div class= "list-group-item" id = "email-view">
-    <h4 id="titl"></h4>
-    <h6 id="posiljalac" ></h6>
-    <h6 id="primalac" ></h6>
-    <p id="telo"></p>
-    <p id="vreme"></p>
-    <form id="arhiva">
-        <input id="arh"  type="submit" value="Archive">
-    </form>
-    <form id="arhivaa">
-        <input id="arhh"  type="submit" value="Unarchive">
-    </form>
-    <form id="replyy">
-        <input type="submit" value="Reply">
-    </form>
-    </div>
+ <div class= "list-group-item" id = "email-view">
+  
 
+<div class="  bg-white rounded">
+    <div class="row justify-content-left">
+        <div class="col-5 text-left">
+            <p id="sender" ></p>
+            <p id="receiver" ></p>
+            <p id="title"></p>
+            <p id="time"></p>
+        </div>
+    </div>
+</div>
+
+<div>
+
+    <div class="row">
+        <div class="span6">
+            <form id="replyy">
+                <input type="submit" class="btn btn-primary  m-1" value="Reply">
+            </form>
+        </div>
+        <div class="span6">
+            <form id="archive" >
+                <input id="arh" class="btn btn-primary  m-1" type="submit" value="Archive">
+            </form>
+        </div>
+        <div class="span6">
+            <form id="unarchivee">
+                <input id="arhh"  class="btn btn-primary  m-1" type="submit" value="Unarchive">
+            </form>
+        </div>
+    </div>
+   
+    <hr>
+    <p id="bodyy"></p>
+    </div>
+</div>
     <div id="emails-view">
-
     </div>
-
     <div id="compose-view">
         <h3>New Email</h3>
         <form id="compose-form">
